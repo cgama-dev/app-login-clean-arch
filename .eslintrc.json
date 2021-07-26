@@ -6,6 +6,9 @@
   "rules": {
     "@typescript-eslint/consistent-type-definitions": "off",
     "@typescript-eslint/no-namespace": "off",
-    "@typescript-eslint/return-await": "off"
+    "@typescript-eslint/return-await": "off",
+    "@typescript-eslint/no-extra-boolean-cast": "off",
+    "@typescript-eslint/trict-boolean-expressions": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off"
   }
 }
