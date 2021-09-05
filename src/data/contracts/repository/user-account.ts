@@ -25,5 +25,7 @@ namespace SaveUserAccountRespository {
     facebookId: string
   }
 
-  export type Result = string | undefined
+  export type Result = {
+    id: string
+  }
 }
