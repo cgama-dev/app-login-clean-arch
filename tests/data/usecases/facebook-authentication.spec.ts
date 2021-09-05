@@ -2,11 +2,15 @@ import { AuthenticationError } from '@/domain/error'
 import { FacebookAuthenticationUseCase } from '@/data/usecases'
 import { mock, MockProxy } from 'jest-mock-extended'
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
-import { LoadUserAccountRespository, CreateUserAccountRespository, UpdateUserWithFacebookRespoitory } from '@/data/contracts/repository/user-account'
+import { LoadUserAccountRespository, SaveUserAccountRespository } from '@/data/contracts/repository/user-account'
+import { mocked } from 'ts-jest/utils'
+import { FacebookAccount } from '@/domain/models'
+
+jest.mock('@/domain/models/facebook-account')
 
 describe('FacebookAuthenticationUseCase', () => {
   let apiFacebookMemory: MockProxy<LoadFacebookUserApi>
-  let userAccountRespositoryMemory: MockProxy<LoadUserAccountRespository & CreateUserAccountRespository & UpdateUserWithFacebookRespoitory>
+  let userAccountRespositoryMemory: MockProxy<LoadUserAccountRespository & SaveUserAccountRespository>
   let facebookAuthenticationUseCase: FacebookAuthenticationUseCase
   const token = 'any_token'
   beforeEach(() => {
@@ -40,31 +44,10 @@ describe('FacebookAuthenticationUseCase', () => {
     expect(userAccountRespositoryMemory.get).toHaveBeenCalledTimes(1)
   })
 
-  it('should call CreateUserAccountRepo when LoadUserAccountRespository returns undefined', async () => {
-    userAccountRespositoryMemory.get.mockResolvedValueOnce(undefined)
+  it('should call SaveFacebookAccountRepository with FacebookAccount', async () => {
+    const FacebookAccountStub = jest.fn().mockImplementation(() => ({}))
+    mocked(FacebookAccount).mockImplementation(FacebookAccountStub)
     await facebookAuthenticationUseCase.execute({ token })
-    expect(userAccountRespositoryMemory.createFromFacebook).toHaveBeenCalledWith(
-      {
-        email: 'any_fb_email',
-        name: 'any_fb_name',
-        facebookId: 'any_fb_id'
-      }
-    )
-    expect(userAccountRespositoryMemory.createFromFacebook).toHaveBeenCalledTimes(1)
-  })
-  it('should call UpdateWithFacebookUserAccountRepo when LoadUserAccountRespository returns data', async () => {
-    userAccountRespositoryMemory.get.mockResolvedValueOnce({
-      id: 'any_id',
-      name: 'any_name'
-    })
-    await facebookAuthenticationUseCase.execute({ token })
-    expect(userAccountRespositoryMemory.updateUserWithFacebook).toHaveBeenCalledWith(
-      {
-        id: 'any_id',
-        name: 'any_name',
-        facebookId: 'any_fb_id'
-      }
-    )
-    expect(userAccountRespositoryMemory.updateUserWithFacebook).toHaveBeenCalledTimes(1)
+    expect(userAccountRespositoryMemory.saveUserWithFacebook).toHaveBeenCalledWith({})
   })
 })

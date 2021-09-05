@@ -13,33 +13,17 @@ namespace LoadUserAccountRespository {
   }
 }
 
-export interface CreateUserAccountRespository {
-  createFromFacebook: (params: CreateUserAccountRespository.Params) => Promise<CreateUserAccountRespository.Result>
+export interface SaveUserAccountRespository {
+  saveUserWithFacebook: (params: SaveUserAccountRespository.Params) => Promise<SaveUserAccountRespository.Result>
 }
 
-namespace CreateUserAccountRespository {
+namespace SaveUserAccountRespository {
   export type Params = {
+    id?: string
     email: string
     name: string
     facebookId: string
   }
 
   export type Result = string | undefined
-}
-export interface UpdateUserWithFacebookRespoitory {
-  updateUserWithFacebook: (params: UpdateUserWithFacebookRespoitory.Params) => Promise<CreateUserAccountRespository.Result>
-}
-
-namespace UpdateUserWithFacebookRespoitory {
-  export type Params = {
-    id: string
-    name: string
-    facebookId: string
-  }
-
-  export type Result = undefined | {
-    email: string
-    name: string
-    facebookId: string
-  }
 }
